@@ -1,5 +1,6 @@
 package com.project.musicwebbe.dto.albumDTO;
 
+import com.project.musicwebbe.entities.Genre;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,5 +27,11 @@ public class AlbumDTO {
     private String provide;
 
     private List<ArtistOfAlbumDTO> artists;
+
+    private List<Genre> genres;
+
+    private List<FavoriteAlbumDTO> favorites;
+
+    private boolean userFavoriteStatus;
 
 }

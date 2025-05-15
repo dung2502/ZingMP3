@@ -29,4 +29,6 @@ public class SongOfArtistDTO {
     private int duration;
 
     private String coverImageUrl;
+
+    List<ArtistOfSongDTO> artists;
 }

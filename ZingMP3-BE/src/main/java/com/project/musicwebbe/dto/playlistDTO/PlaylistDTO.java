@@ -32,4 +32,7 @@ public class PlaylistDTO {
 
     private UserOfPlaylistDTO appUser;
 
+    private List<FavoritePlaylistDTO> favorites;
+
+    private boolean userFavoriteStatus;
 }

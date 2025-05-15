@@ -3,10 +3,14 @@ package com.project.musicwebbe.controller.publicController;
 import com.project.musicwebbe.dto.artistDTO.AlbumOfArtistDTO;
 import com.project.musicwebbe.dto.artistDTO.ArtistDTO;
 import com.project.musicwebbe.dto.artistDTO.SongOfArtistDTO;
+import com.project.musicwebbe.dto.songDTO.ArtistOfSongDTO;
 import com.project.musicwebbe.entities.Artist;
 import com.project.musicwebbe.entities.Genre;
 import com.project.musicwebbe.service.artist.impl.ArtistService;
+import com.project.musicwebbe.util.ConvertEntityToDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,17 +24,8 @@ public class ArtistRestController {
     @Autowired
     private ArtistService artistService;
 
-    @GetMapping
-    public ResponseEntity<List<ArtistDTO>> getAllArtists() {
-        List<Artist> artists = artistService.findAll();
-        if (artists.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        List<ArtistDTO> artistDTOS = artists.stream()
-                .map(this::convertToArtistDTO)
-                .toList();
-        return ResponseEntity.ok(artistDTOS);
-    }
+    @Autowired
+    private ConvertEntityToDTO convertEntityToDTO;
 
     @GetMapping("/{artistId}")
     public ResponseEntity<ArtistDTO> getArtistById(@PathVariable Long artistId) {
@@ -38,43 +33,19 @@ public class ArtistRestController {
         if (artist == null) {
             return ResponseEntity.notFound().build();
         }
-        ArtistDTO artistDTO = convertToArtistDTO(artist);
+        ArtistDTO artistDTO = convertEntityToDTO.convertToArtistDTO(artist);
         return ResponseEntity.ok(artistDTO);
     }
 
-    private ArtistDTO convertToArtistDTO(Artist artist) {
-        ArtistDTO artistDTO = new ArtistDTO();
-        artistDTO.setArtistId(artist.getArtistId());
-        artistDTO.setArtistName(artist.getArtistName());
-        artistDTO.setAvatar(artist.getAvatar());
-        artistDTO.setBiography(artist.getBiography());
-        if (artist.getGenres() != null) {
-            artistDTO.setGenres(artist.getGenres());
+    @GetMapping("/name/{artistName}")
+    public ResponseEntity<ArtistDTO> getArtistByName(@PathVariable String artistName) {
+        Artist artist = artistService.findByName(artistName);
+        if (artist == null) {
+            return ResponseEntity.notFound().build();
         }
-        if (artist.getSongs() != null) {
-            List<SongOfArtistDTO> songOfArtistDTOS = artist.getSongs().stream()
-                    .map(song -> SongOfArtistDTO.builder()
-                            .songId(song.getSongId())
-                            .title(song.getTitle())
-                            .dateCreate(song.getDateCreate())
-                            .lyrics(song.getLyrics())
-                            .songUrl(song.getSongUrl())
-                            .duration(song.getDuration())
-                            .coverImageUrl(song.getCoverImageUrl())
-                            .build())
-                    .toList();
-            artistDTO.setSongs(songOfArtistDTOS);
-        }
-        if (artist.getAlbums() != null) {
-            List<AlbumOfArtistDTO> albumOfArtistDTOS = artist.getAlbums().stream()
-                    .map(album -> AlbumOfArtistDTO.builder()
-                            .albumId(album.getAlbumId())
-                            .title(album.getTitle())
-                            .build()).toList();
-            artistDTO.setAlbums(albumOfArtistDTOS);
-        }
-
-        // Chuyển đổi các entity liên quan sang DTO tương ứng nếu cần
-        return artistDTO;
+        ArtistDTO artistDTO = convertEntityToDTO.convertToArtistDTO(artist);
+        return ResponseEntity.ok(artistDTO);
     }
+
+
 }

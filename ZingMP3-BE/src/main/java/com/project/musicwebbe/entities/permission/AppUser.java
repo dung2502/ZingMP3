@@ -1,7 +1,7 @@
 package com.project.musicwebbe.entities.permission;
 
-import com.project.musicwebbe.entities.Favorite;
-import com.project.musicwebbe.entities.Playlist;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.musicwebbe.entities.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+
 @Table(name = "app_users", //
         uniqueConstraints = { //
                 @UniqueConstraint(name = "APP_USER_UK", columnNames = "email"),
@@ -67,6 +68,7 @@ public class AppUser implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = { @JoinColumn (name = "user_id") },
             inverseJoinColumns = { @JoinColumn (name = "role_id")})
+    @JsonIgnore // 🔥 Tránh lỗi serialization JSON
     private Set<AppRole> roles;
 
     @OneToMany(mappedBy = "appUser")
@@ -74,6 +76,15 @@ public class AppUser implements Serializable {
 
     @OneToMany(mappedBy = "appUser")
     private List<Favorite> favorites;
+
+    @OneToMany(mappedBy = "appUser")
+    private List<FavoriteAlbum> favoriteAlbums;
+
+    @OneToMany(mappedBy = "appUser")
+    private List<FavoriteArtist> favoriteArtists;
+
+    @OneToMany(mappedBy = "appUser")
+    private List<FavoritePlaylist> favoritePlaylists;
 
     @Column(name = "account_non_expired")
     private Boolean accountNonExpired;

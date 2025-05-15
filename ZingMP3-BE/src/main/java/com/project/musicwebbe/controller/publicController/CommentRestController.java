@@ -3,8 +3,6 @@ package com.project.musicwebbe.controller.publicController;
 import com.project.musicwebbe.dto.commentDTO.*;
 import com.project.musicwebbe.entities.Comment;
 import com.project.musicwebbe.service.Comment.ICommentService;
-import com.project.musicwebbe.service.commentEmotion.*;
-import com.project.musicwebbe.service.permission.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,27 +19,6 @@ public class CommentRestController {
 
     @Autowired
     private ICommentService commentService;
-
-    @Autowired
-    private ICommentEmotionService commentEmotionService;
-
-    @Autowired
-    private ICommentLikeService commentLikeService;
-
-    @Autowired
-    private ICommentDislikeService commentDislikeService;
-
-    @Autowired
-    private ICommentHahaService commentHahaService;
-
-    @Autowired
-    private ICommentWowService commentWowService;
-
-    @Autowired
-    private ICommentHeartService commentHeartService;
-
-    @Autowired
-    private IUserService userService;
 
     @GetMapping("/song/{songId}")
     public ResponseEntity<Page<CommentDTO>> getAllCommentBySongId(@PathVariable Long songId,
@@ -185,7 +162,7 @@ public class CommentRestController {
             commentDTO.setHearts(dislikes);
         }
 
-        // Chuyển đổi các entity liên quan sang DTO tương ứng nếu cần
         return commentDTO;
     }
+
 }

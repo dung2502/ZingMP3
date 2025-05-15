@@ -3,8 +3,12 @@ package com.project.musicwebbe.controller.auth;
 import com.project.musicwebbe.dto.request.AppUserRequest;
 import com.project.musicwebbe.dto.respone.AuthenticationResponse;
 import com.project.musicwebbe.dto.respone.ErrorDetail;
+import com.project.musicwebbe.dto.userDTO.UserDTO;
 import com.project.musicwebbe.entities.permission.AppUser;
 import com.project.musicwebbe.service.permission.IUserService;
+import com.project.musicwebbe.service.permission.impl.UserService;
+import com.project.musicwebbe.util.ConvertEntityToDTO;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,9 +25,11 @@ public class UserRestController {
 
     @Autowired
     private IUserService userService;
+    @Autowired
+    private ConvertEntityToDTO convertEntityToDTO;
 
     @GetMapping("/customer")
-    public ResponseEntity<?> getAllCustomers(@RequestParam(name = "userCode", defaultValue = "") String userCode,
+    public ResponseEntity<Page<UserDTO>> getAllCustomers(@RequestParam(name = "userCode", defaultValue = "") String userCode,
                                          @RequestParam(name = "fullName", defaultValue = "") String fullName,
                                          @RequestParam(name = "page", defaultValue = "0") int page
 
@@ -33,11 +39,9 @@ public class UserRestController {
         }
 
         Page<AppUser> customers = userService.searchAllCustomerByUserCodeOrFullName(userCode, fullName, PageRequest.of(page, 10));
-        if (customers.isEmpty()) {
-            return ResponseEntity.status(404).body("Không tìm thấy khách hàng!");
-        } else {
-            return ResponseEntity.ok(customers);
-        }
+
+        Page<UserDTO> customersDTO = customers.map(convertEntityToDTO::convertToUserDTO);
+        return ResponseEntity.ok(customersDTO);
     }
 
     @GetMapping("/employees")
@@ -50,10 +54,8 @@ public class UserRestController {
             page = 0;
         }
         Page<AppUser> employees = userService.searchAllEmployeeByUserCodeOrFullName(userCode, fullName, PageRequest.of(page, 10));
-        if (employees.isEmpty()) {
-            return ResponseEntity.status(404).body("Không tìm thấy nhân viên!");
-        }
-        return ResponseEntity.ok(employees);
+        Page<UserDTO> employeesDTO = employees.map(convertEntityToDTO::convertToUserDTO);
+        return ResponseEntity.ok(employeesDTO);
     }
 
     @GetMapping("/{userId}")

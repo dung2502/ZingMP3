@@ -12,6 +12,7 @@ public interface IUserService extends IGeneralService<AppUser> {
     AppUser findByUserCode(String userCode);
     Boolean existsByEmail(String email);
 
+
     Page<AppUser> searchAllCustomerByUserCodeOrFullName(String userCode, String fullName, Pageable pageable);
 
     Page<AppUser> searchAllEmployeeByUserCodeOrFullName(String userCode, String fullName, Pageable pageable);
@@ -46,4 +47,5 @@ public interface IUserService extends IGeneralService<AppUser> {
      * @return an {@link AuthenticationResponse} indicating the outcome of the update operation
      */
     AuthenticationResponse updateUser(Long userId, AppUserRequest appUserRequest);
+
 }

@@ -14,4 +14,9 @@ public interface IAlbumService extends IGeneralService<Album> {
     List<Album> findByAlbumName(String albumName);
 
     Page<Album> searchAllByTitleAndArtistName(String title, String artistName, Pageable pageable);
+
+    Page<Album> searchAllFavoriteAlbumsByUserId(Long userId, Pageable pageable);
+
+    List<Album> findNewAlbumsWithNational(String national);
+
 }

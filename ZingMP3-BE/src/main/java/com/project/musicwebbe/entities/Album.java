@@ -1,6 +1,7 @@
 package com.project.musicwebbe.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,11 +22,13 @@ public class Album {
     @Column(name = "album_id")
     private Long albumId;
 
+    @NotBlank(message = "Tiêu đề không được để trống!")
     private String title;
 
     @Column(name = "date_create")
     private LocalDateTime dateCreate;
 
+    @NotBlank(message = "Ảnh bìa không được để trống!")
     private String coverImageUrl; // URL tới ảnh bìa album
 
     @OneToMany(mappedBy = "album", fetch = FetchType.LAZY)
@@ -41,4 +44,15 @@ public class Album {
             inverseJoinColumns = @JoinColumn(name = "artist_id")
     )
     private List<Artist> artists;
+
+    @ManyToMany()
+    @JoinTable(
+            name = "album_genre",
+            joinColumns = @JoinColumn(name = "album_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private List<Genre> genres;
+
+    @OneToMany(mappedBy = "album")
+    private List<FavoriteAlbum> favoriteAlbums;
 }

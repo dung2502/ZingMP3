@@ -20,8 +20,10 @@ public class WebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer {
      */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic");
+        // Cấu hình message broker cho user queue
+        registry.enableSimpleBroker("/topic", "/queue");  // "/queue" để gửi tin nhắn riêng
         registry.setApplicationDestinationPrefixes("/app");
+        registry.setUserDestinationPrefix("/user");  // Cấu hình prefix cho user queue
     }
 
     /**
@@ -32,6 +34,7 @@ public class WebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer {
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+        // Đăng ký endpoint để ReactJS kết nối
         registry.addEndpoint("/ws").setAllowedOrigins("http://localhost:3000","http://localhost:3001").withSockJS();
     }
 }

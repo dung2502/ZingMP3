@@ -2,6 +2,7 @@ package com.project.musicwebbe.entities;
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class Song {
     @Column(name = "song_id")
     private Long songId;
 
+    @NotBlank(message = "Tên bài hát không được để trống!")
     private String title;
 
     @Column(name = "date_create")
@@ -34,10 +36,12 @@ public class Song {
     @JoinColumn(name = "album_id")
     private Album album;
 
+    @NotBlank(message = "Bài hát không được để trống!")
     private String songUrl; // URL tới file nhạc
 
     private int duration; // Thời lượng bài hát tính bằng giây
 
+    @NotBlank(message = "Ảnh đại diện không được để trống!")
     private String coverImageUrl;
 
     @OneToMany(mappedBy = "song")

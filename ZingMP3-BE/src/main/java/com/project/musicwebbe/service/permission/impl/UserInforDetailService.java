@@ -23,4 +23,11 @@ public class UserInforDetailService implements UserDetailsService {
         }
         return new UserInforUserDetails(user, user.getRoles());
     }
+    public UserDetails loadUserByUsercode(String usercode) throws UsernameNotFoundException {
+        AppUser user = userRepository.findByUserCode(usercode);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return new UserInforUserDetails(user, user.getRoles());
+    }
 }

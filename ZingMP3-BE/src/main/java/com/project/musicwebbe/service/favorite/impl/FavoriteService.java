@@ -40,4 +40,18 @@ public class FavoriteService implements IFavoriteService {
     public void remove(Long id) {
         favoriteRepository.deleteById(id);
     }
+    @Override
+    public List<Favorite> findAllByAppUser_UserId(Long userId) {
+        return favoriteRepository.findAllByAppUser_UserId(userId);
+    }
+
+    @Override
+    public List<Favorite> findAllByUserIdAndSearch(Long userId, String search) {
+        return favoriteRepository.findAllByUserIdAndSearch(userId, search);
+    }
+
+    @Override
+    public void deleteBySongIdAndUserCode(Long songId, String userCode) {
+        favoriteRepository.deleteBySongSongIdAndAppUserUserCodeContaining(songId, userCode);
+    }
 }

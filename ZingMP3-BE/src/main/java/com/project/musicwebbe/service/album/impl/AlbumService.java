@@ -18,6 +18,7 @@ public class AlbumService implements IAlbumService {
 
     @Override
     public List<Album> findAll() {
+
         return albumRepository.findAll();
     }
 
@@ -34,6 +35,16 @@ public class AlbumService implements IAlbumService {
     @Override
     public Page<Album> searchAllByTitleAndArtistName(String title, String artistName, Pageable pageable) {
         return albumRepository.searchAllByTitleAndArtistName(title, artistName, pageable);
+    }
+
+    @Override
+    public Page<Album> searchAllFavoriteAlbumsByUserId(Long userId, Pageable pageable) {
+        return albumRepository.findAllFavoriteAlbumsByUserId(userId, pageable);
+    }
+
+    @Override
+    public List<Album> findNewAlbumsWithNational(String national) {
+        return albumRepository.findNewAlbumsWithNational(national);
     }
 
     @Override

@@ -21,7 +21,11 @@ public class SongListenRestController {
     private SongService songService;
 
     @PutMapping
-    public ResponseEntity<SongListen> updateListen(@RequestBody Song song) {
+    public ResponseEntity<?> updateListen(@RequestParam Long songId) {
+        Song song = songService.findById(songId);
+        if (song == null) {
+            return ResponseEntity.status(404).body("Song not found");
+        }
         SongListen songListen = songListenService.findBySongIdToday(song.getSongId());
         if (songListen == null) {
             SongListen newSongListen = new SongListen();
@@ -33,7 +37,7 @@ public class SongListenRestController {
             songListen.setTotal(songListen.getTotal() + 1);
             songListenService.save(songListen);
         }
-        return ResponseEntity.ok(songListen);
+        return ResponseEntity.ok().build();
     }
 
 }

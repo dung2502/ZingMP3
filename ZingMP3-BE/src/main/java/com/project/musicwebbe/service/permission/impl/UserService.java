@@ -134,7 +134,7 @@ public class UserService implements IUserService {
         }
         return AuthenticationResponse.builder()
                 .statusCode(200)
-                .message("Thêm mới thành công!\n" + "Eamil: " + email + "\n" + "Mật khẩu: " + appUserRequest.getPassword())
+                .message("Thêm mới thành công!\n" + "Email: " + email + "\n" + "Mật khẩu: " + appUserRequest.getPassword())
                 .build();
     }
 
@@ -183,4 +183,6 @@ public class UserService implements IUserService {
                 .message("Cập nhật thành công!")
                 .build();
     }
+
+
 }

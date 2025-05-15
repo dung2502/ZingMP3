@@ -20,4 +20,6 @@ public class AlbumOfArtistDTO {
     private LocalDateTime dateCreate;
 
     private String provide;
+
+    private String coverImageUrl;
 }

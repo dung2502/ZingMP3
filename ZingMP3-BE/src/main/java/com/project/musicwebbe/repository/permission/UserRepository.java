@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -16,6 +15,8 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<AppUser, Long> {
     AppUser findByEmail(String email);
     Boolean existsByEmail(String email);
+
+
     @Query(value = "select * from app_users where user_code=:userCode",nativeQuery = true)
     AppUser findByUserCode(String userCode);
 
@@ -29,11 +30,11 @@ public interface UserRepository extends JpaRepository<AppUser, Long> {
 
 
     @Query("SELECT DISTINCT u FROM AppUser u JOIN u.roles r " +
-            "WHERE (u.userCode LIKE %:userCode% or u.fullName LIKE %:fullName%) AND r.roleId = 4")
+            "WHERE (u.userCode LIKE %:userCode% or u.fullName LIKE %:fullName%) AND r.roleId = 3")
     Page<AppUser> searchAllByUserCodeOrFullNameAndRoleId(@Param("userCode") String userCode, @Param("fullName") String fullName, Pageable pageable);
 
     @Query("SELECT DISTINCT u FROM AppUser u JOIN u.roles r " +
-            "WHERE (u.userCode LIKE %:userCode% or u.fullName LIKE %:fullName%) AND r.roleId != 4")
+            "WHERE (u.userCode LIKE %:userCode% or u.fullName LIKE %:fullName%) AND r.roleId = 2")
     Page<AppUser> searchAllEmployeeByUserCodeOrFullNameAndRoleId(@Param("userCode") String userCode, @Param("fullName") String fullName, Pageable pageable);
 
     /**
@@ -72,4 +73,5 @@ public interface UserRepository extends JpaRepository<AppUser, Long> {
     void updateAvatarImage( @Param("avatar") String avatar, @Param("userId") Long userId);
 
     Boolean existsByUserCode(String newUserCode);
+
 }

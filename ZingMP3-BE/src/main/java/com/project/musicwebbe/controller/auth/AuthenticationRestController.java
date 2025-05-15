@@ -70,6 +70,7 @@ public class AuthenticationRestController {
         try {
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
             String userCode = decodedToken.getUid();
+
             AppUser appUser = userService.findByUserCode(userCode);
             if (appUser != null) {
                 //da dang ky roi

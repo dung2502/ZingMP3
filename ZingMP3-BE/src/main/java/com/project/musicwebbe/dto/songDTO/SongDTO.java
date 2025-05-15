@@ -1,6 +1,7 @@
 package com.project.musicwebbe.dto.songDTO;
 
 import com.project.musicwebbe.entities.Genre;
+import com.project.musicwebbe.entities.SongListen;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,7 +33,13 @@ public class SongDTO {
 
     private List<Genre> genres;
 
+    private List<SongListenDTO> songListens;
+
     private List<ArtistOfSongDTO> artists;
 
     private int listens;
+
+    private List<FavoriteDTO> favorites;
+
+    private boolean userFavoriteStatus;
 }

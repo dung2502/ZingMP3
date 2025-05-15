@@ -29,6 +29,11 @@ public class PlaylistService implements IPlaylistService {
     }
 
     @Override
+    public Page<Playlist> searchAllFavoritePlaylistsByUserId(Long userId, Pageable pageable) {
+        return playlistRepository.findAllFavoritePlayListsByUserId(userId, pageable);
+    }
+
+    @Override
     public Playlist findById(Long id) {
 
         return playlistRepository.findById(id).orElse(null);
@@ -47,6 +52,17 @@ public class PlaylistService implements IPlaylistService {
     }
     @Override
     public Page<Playlist> searchAllByPlaylistName(String playlistName, Pageable pageable) {
-        return playlistRepository.searchAllByPlaylistNameContaining(playlistName, pageable);
+        return playlistRepository.findAllByPlaylistNameContainingAndPlaylistStatusIsFalse(playlistName, pageable);
     }
+
+    @Override
+    public void deletePlaylistSongs(Long playlistId) {
+        playlistRepository.deletePlaylistSongs(playlistId);
+    }
+
+    @Override
+    public void deletePlaylist(Long playlistId) {
+        playlistRepository.deletePlaylist(playlistId);
+    }
+
 }

@@ -2,6 +2,7 @@ package com.project.musicwebbe.entities;
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,11 +23,16 @@ public class Artist {
     @Column(name = "artist_id")
     private Long artistId;
 
+    @NotBlank(message = "Tên nghệ sĩ không được để trống!")
     @Column(name = "artist_name")
     private String artistName;
 
     @Column(name = "avatar")
+    @NotBlank(message = "Ảnh đại diện không được để trống!")
     private String avatar;
+
+    @Column(name = "artist_status")
+    private boolean playlistStatus = false;
 
     @ManyToMany()
     @JoinTable(
@@ -54,4 +60,7 @@ public class Artist {
             inverseJoinColumns = @JoinColumn(name = "album_id")
     )
     private List<Album> albums;
+
+    @OneToMany(mappedBy = "artist")
+    private List<FavoriteArtist> favoriteArtists;
 }

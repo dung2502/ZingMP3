@@ -29,39 +29,7 @@ public class ArtistDTO {
 
     private List<AlbumOfArtistDTO> albums;
 
-    public ArtistDTO convertToArtistDTO(Artist artist) {
-        List<Genre> genres = artist.getGenres();
+    private List<FavoriteArtistDTO> favorites;
 
-        List<SongOfArtistDTO> songOfArtistDTOS = artist.getSongs().stream()
-                .map(song -> SongOfArtistDTO.builder()
-                        .songId(song.getSongId())
-                        .title(song.getTitle())
-                        .dateCreate(song.getDateCreate())
-                        .lyrics(song.getLyrics())
-                        .songUrl(song.getSongUrl())
-                        .duration(song.getDuration())
-                        .coverImageUrl(song.getCoverImageUrl())
-                        .build())
-                .toList();
-        // Chuyển đổi các nghệ sĩ (artists) liên kết với album sang AlbumArtistDTO
-        List<AlbumOfArtistDTO> artistAlbumDTOs = artist.getAlbums().stream()
-                .map(album -> AlbumOfArtistDTO.builder()
-                        .albumId(album.getAlbumId())
-                        .title(album.getTitle())
-                        .dateCreate(album.getDateCreate())
-                        .provide(album.getProvide())
-                        .build())
-                .toList();
-
-        // Tạo và trả về AlbumDTO
-        return ArtistDTO.builder()
-                .artistId(artist.getArtistId())
-                .artistName(artist.getArtistName())
-                .avatar(artist.getAvatar())
-                .biography(artist.getBiography())
-                .genres(genres)
-                .songs(songOfArtistDTOS)
-                .albums(artistAlbumDTOs)
-                .build();
-    }
+    private boolean userFavoriteStatus;
 }

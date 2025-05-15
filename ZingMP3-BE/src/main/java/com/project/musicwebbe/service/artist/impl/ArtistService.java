@@ -31,8 +31,23 @@ public class ArtistService implements IArtistService {
     }
 
     @Override
+    public Page<Artist> searchAllByArtistName(String artistName, Pageable pageable) {
+        return artistRepository.searchAllByArtistNameContaining(artistName, pageable);
+    }
+
+    @Override
+    public Page<Artist> searchAllFavoriteArtistsByUserId(Long userId, Pageable pageable) {
+        return artistRepository.findAllFavoriteArtistsByUserId(userId, pageable);
+    }
+
+    @Override
     public Artist findById(Long id) {
         return artistRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Artist findByName(String artistName) {
+        return artistRepository.findByArtistNameContaining(artistName);
     }
 
     @Override

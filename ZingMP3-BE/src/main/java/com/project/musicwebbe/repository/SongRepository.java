@@ -16,6 +16,19 @@ public interface SongRepository extends JpaRepository<Song, Long> {
 
     List<Song> searchAllByTitleContaining(String title);
 
+    @Query(value = "SELECT s.song_id, s.title, s.date_create, s.lyrics, s.album_id, s.song_url, s.duration, s.cover_image_url " +
+            "FROM songs s JOIN artist_song ars ON s.song_id = ars.song_id " +
+            "JOIN artists a ON ars.artist_id = a.artist_id " +
+            "WHERE s.title LIKE %:title% OR a.artist_name LIKE %:artistName% " +
+            "GROUP BY s.song_id", nativeQuery = true)
+    Page<Song> findAllByTitleAndArtist(@Param("title") String title, @Param("artistName") String artistName, Pageable pageable);
+
+    @Query("SELECT s FROM Song s  JOIN s.songListens sl " +
+            "WHERE sl.dateCreate >= :sevenDays " +
+            "GROUP BY s.songId " +
+            "ORDER BY SUM(sl.total) DESC LIMIT 3")
+    List<Song> findTopThreeSongsInSevenDays(@Param("sevenDays") LocalDate sevenDays);
+
     @Query("SELECT s FROM Song s JOIN s.genres g JOIN s.songListens sl " +
             "WHERE g.genreName LIKE %:national% AND sl.dateCreate >= :startOfWeek " +
             "GROUP BY s.songId " +
@@ -24,5 +37,23 @@ public interface SongRepository extends JpaRepository<Song, Long> {
                                          @Param("startOfWeek") LocalDate startOfWeek,
                                          Pageable pageable);
 
+    @Query("SELECT s from Song s JOIN s.favorites f " +
+            "WHERE f.appUser.userId = :userId ")
+    Page<Song> findAllFavoriteSongsByUserId(@Param("userId")Long userId, Pageable pageable);
 
+    @Query("SELECT s, SUM(sl.total) AS total_listens FROM Song s JOIN s.songListens sl " +
+            "GROUP BY s.songId " +
+            "ORDER BY total_listens DESC, s.dateCreate DESC LIMIT 100")
+    List<Song> findNewSongRatings();
+
+    @Query("SELECT s FROM Song s JOIN s.genres g " +
+            "WHERE g.genreName LIKE %:national% " +
+            "GROUP BY s.songId " +
+            "ORDER BY s.dateCreate DESC LIMIT 100")
+    List<Song> findNewSongsWithNational(@Param("national")String national);
+
+    @Query("SELECT s, SUM(sl.total) AS total_listens FROM Song s JOIN s.songListens sl " +
+            "GROUP BY s.songId " +
+            "ORDER BY total_listens DESC LIMIT 100")
+    List<Song> findTop100Songs();
 }

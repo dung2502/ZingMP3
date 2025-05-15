@@ -11,7 +11,6 @@ import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.WebSocket;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -137,13 +136,13 @@ public class CommentAuthRestController {
 
         if (comment.getSong() != null) {
             commentDTO.setSong(SongOfCommentDTO.builder()
-                            .songId(comment.getSong().getSongId())
-                            .songUrl(comment.getSong().getSongUrl())
-                            .title(comment.getSong().getTitle())
-                            .dateCreate(comment.getSong().getDateCreate())
-                            .lyrics(comment.getSong().getLyrics())
-                            .coverImageUrl(comment.getSong().getCoverImageUrl())
-                            .duration(comment.getSong().getDuration())
+                    .songId(comment.getSong().getSongId())
+                    .songUrl(comment.getSong().getSongUrl())
+                    .title(comment.getSong().getTitle())
+                    .dateCreate(comment.getSong().getDateCreate())
+                    .lyrics(comment.getSong().getLyrics())
+                    .coverImageUrl(comment.getSong().getCoverImageUrl())
+                    .duration(comment.getSong().getDuration())
                     .build());
         }
 

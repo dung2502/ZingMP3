@@ -3,6 +3,7 @@ package com.project.musicwebbe.config;
 import com.project.musicwebbe.entities.permission.RefreshToken;
 import com.project.musicwebbe.service.permission.impl.JwtService;
 import com.project.musicwebbe.service.permission.impl.RefreshTokenService;
+import com.project.musicwebbe.service.permission.impl.UserInforDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -24,13 +25,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Optional;
 
-/**
- * JWT authentication filter to validate JWT tokens from incoming requests.
- * This filter intercepts requests, extracts and validates JWT tokens,
- * and sets up Spring Security context if the token is valid.
- * <p>
- * Author: KhangDV
- */
+
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -42,6 +37,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private RefreshTokenService refreshTokenService;
 
+    @Autowired
+    UserInforDetailService userInforDetailService;
+
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -49,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
-        final String id =  request.getHeader("Userid");
+        final String id = request.getHeader("Userid");
 
         String jwt = null;
         String rft = null;
@@ -90,10 +88,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             RefreshToken refresh = refreshToken.get();
             email = refresh.getUser().getEmail();
+            String oauth2Code = refresh.getUser().getUserCode();
+            UserDetails userDetails;
 
-            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
+            if ((email != null || oauth2Code != null) && SecurityContextHolder.getContext().getAuthentication() == null) {
+                if (email == null) {
+                    userDetails = userInforDetailService.loadUserByUsercode(oauth2Code);
+                } else {
+                    userDetails = this.userDetailsService.loadUserByUsername(email);
+                }
 
                 if (jwtService.isTokenValid(jwt)) {
                     setAuthentication(request, userDetails);

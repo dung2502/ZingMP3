@@ -1,11 +1,13 @@
 package com.project.musicwebbe.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.musicwebbe.entities.permission.AppUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,6 +43,9 @@ public class Playlist {
     @JoinColumn(name = "user_id")
     private AppUser appUser;
 
-    @OneToMany(mappedBy = "playlist")
+    @OneToMany(mappedBy = "playlist", cascade = CascadeType.ALL)
     private List<PlayListSong> playListSongs;
+
+    @OneToMany(mappedBy = "playlist")
+    private List<FavoritePlaylist> favoritePlaylists;
 }

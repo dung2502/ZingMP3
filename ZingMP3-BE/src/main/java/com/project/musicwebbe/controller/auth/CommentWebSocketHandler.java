@@ -2,7 +2,6 @@ package com.project.musicwebbe.controller.auth;
 
 import com.project.musicwebbe.entities.Comment;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Controller;
 public class CommentWebSocketHandler {
     @MessageMapping("/sendComment")
     @SendTo("/topic/createComment")
-    public static Comment sendAllComment(@Payload Comment comment){
+    public Comment sendAllComment(Comment comment){
         return comment ;
     }
 
